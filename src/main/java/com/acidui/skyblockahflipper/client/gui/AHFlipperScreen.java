@@ -1,9 +1,9 @@
 package com.acidui.skyblockahflipper.client.gui;
 
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import com.acidui.skyblockahflipper.client.auction.AuctionScanner;
 import com.acidui.skyblockahflipper.client.auction.ProfitableFlip;
@@ -28,18 +28,18 @@ public class AHFlipperScreen extends Screen {
     @Override
     protected void init() {
         super.init();
-        clearChildren();
+        this.clearChildren();
 
         int centerX = this.width / 2;
         int startY = 20;
 
-        // Title
-        this.addDrawableChild(new ButtonWidget.Builder(Text.literal("✕"), button -> this.close())
+        // Close button
+        this.addDrawableChild(ButtonWidget.builder(Text.literal("✕"), button -> this.close())
                 .dimensions(this.width - 30, 10, 20, 20)
                 .build());
 
-        // Min Profit Input
-        this.addDrawableChild(new ButtonWidget.Builder(Text.literal("Min Profit:"), button -> {})
+        // Min Profit Label
+        this.addDrawableChild(ButtonWidget.builder(Text.literal("Min Profit:"), button -> {})
                 .dimensions(20, startY, 100, 20)
                 .build());
 
@@ -48,8 +48,8 @@ public class AHFlipperScreen extends Screen {
         this.addSelectableChild(minProfitField);
         this.setInitialFocus(minProfitField);
 
-        // Max Price Input
-        this.addDrawableChild(new ButtonWidget.Builder(Text.literal("Max Price:"), button -> {})
+        // Max Price Label
+        this.addDrawableChild(ButtonWidget.builder(Text.literal("Max Price:"), button -> {})
                 .dimensions(250, startY, 100, 20)
                 .build());
 
@@ -58,12 +58,12 @@ public class AHFlipperScreen extends Screen {
         this.addSelectableChild(maxPriceField);
 
         // Scan Button
-        scanButton = this.addDrawableChild(new ButtonWidget.Builder(Text.literal("Scan Auctions"), button -> scanAuctions())
+        scanButton = this.addDrawableChild(ButtonWidget.builder(Text.literal("Scan Auctions"), button -> scanAuctions())
                 .dimensions(centerX - 100, startY + 30, 200, 20)
                 .build());
 
         // Refresh Button
-        refreshButton = this.addDrawableChild(new ButtonWidget.Builder(Text.literal("Refresh Data"), button -> refreshData())
+        refreshButton = this.addDrawableChild(ButtonWidget.builder(Text.literal("Refresh Data"), button -> refreshData())
                 .dimensions(centerX - 100, startY + 60, 200, 20)
                 .build());
     }
@@ -86,16 +86,16 @@ public class AHFlipperScreen extends Screen {
     }
 
     @Override
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        this.renderBackground(matrices);
-        super.render(matrices, mouseX, mouseY, delta);
+    public void render(DrawContext context, int mouseX, int mouseY, float delta) {
+        this.renderBackground(context, mouseX, mouseY, delta);
+        super.render(context, mouseX, mouseY, delta);
 
         int startY = 110;
         int lineHeight = 25;
         int visibleLines = (this.height - startY - 20) / lineHeight;
 
-        // Draw results
-        this.textRenderer.draw(matrices, "Found: " + currentFlips.size() + " profitable flips", 20, startY - 20, 0xFFFFFF);
+        // Draw results header
+        context.drawTextWithShadow(this.textRenderer, "Found: " + currentFlips.size() + " profitable flips", 20, startY - 20, 0xFFFFFF);
 
         for (int i = 0; i < Math.min(visibleLines, currentFlips.size()); i++) {
             int flipIndex = scrollOffset + i;
@@ -106,18 +106,18 @@ public class AHFlipperScreen extends Screen {
             boolean isHovered = mouseX > 20 && mouseX < this.width - 20 && mouseY > y && mouseY < y + lineHeight - 5;
 
             if (selectedFlipIndex == flipIndex) {
-                fill(matrices, 15, y - 2, this.width - 15, y + lineHeight - 7, 0xFF4CAF50);
+                context.fill(15, y - 2, this.width - 15, y + lineHeight - 7, 0xFF4CAF50);
             } else if (isHovered) {
-                fill(matrices, 15, y - 2, this.width - 15, y + lineHeight - 7, 0xFF333333);
+                context.fill(15, y - 2, this.width - 15, y + lineHeight - 7, 0xFF333333);
             }
 
             String itemName = flip.getItemName();
             String profitText = "Profit: " + formatNumber(flip.getProfit()) + " coins";
             String priceText = "Buy: " + formatNumber(flip.getBuyPrice()) + " | Sell: " + formatNumber(flip.getSellPrice());
 
-            this.textRenderer.draw(matrices, itemName, 25, y, 0xFFFFFF);
-            this.textRenderer.draw(matrices, profitText, 25, y + 10, 0xFF4CAF50);
-            this.textRenderer.draw(matrices, priceText, 25, y + 18, 0xFFBBBBBB);
+            context.drawTextWithShadow(this.textRenderer, itemName, 25, y, 0xFFFFFF);
+            context.drawTextWithShadow(this.textRenderer, profitText, 25, y + 10, 0xFF4CAF50);
+            context.drawTextWithShadow(this.textRenderer, priceText, 25, y + 18, 0xFFBBBBBB);
         }
     }
 
