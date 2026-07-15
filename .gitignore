@@ -1,0 +1,25 @@
+# Gradle
+.gradle/
+build/
+out/
+dists/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Fabric
+run/
+chains.json
+
+# Minecraft
+.minecraft/
+run/
+
+# Misc
+*.jar
+*.class

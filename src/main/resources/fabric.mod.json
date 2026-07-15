@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "id": "skyblock-ah-flipper",
+  "version": "${version}",
+  "name": "Skyblock AH Flipper",
+  "description": "Automatically find and notify you of profitable Auction House flips in Hypixel Skyblock",
+  "authors": [
+    "aciduI"
+  ],
+  "contact": {},
+  "license": "MIT",
+  "icon": "assets/skyblock-ah-flipper/icon.png",
+  "environment": "client",
+  "entrypoints": {
+    "main": [
+      "com.acidui.skyblockahflipper.SkyblockAHFlipperMod"
+    ],
+    "client": [
+      "com.acidui.skyblockahflipper.client.SkyblockAHFlipperClient"
+    ]
+  },
+  "mixins": [
+    "skyblock-ah-flipper.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.14.24",
+    "minecraft": "~1.20.1",
+    "java": ">=17"
+  }
+}
